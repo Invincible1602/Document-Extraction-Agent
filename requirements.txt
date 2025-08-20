@@ -1,0 +1,10 @@
+python-dotenv
+pydantic
+pdf2image
+pillow
+pytesseract
+google-generativeai
+requests
+pandas
+rich
+streamlit
