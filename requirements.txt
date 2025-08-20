@@ -1,10 +1,12 @@
+streamlit
 python-dotenv
 pydantic
 pdf2image
 pillow
 pytesseract
 google-genai
+langchain
+langchain-google-genai
 requests
 pandas
 rich
-streamlit
