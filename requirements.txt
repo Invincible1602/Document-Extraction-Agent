@@ -3,7 +3,7 @@ pydantic
 pdf2image
 pillow
 pytesseract
-google-generativeai
+google-genai
 requests
 pandas
 rich

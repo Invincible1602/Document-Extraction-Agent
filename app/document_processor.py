@@ -60,15 +60,24 @@ def ocr_with_api(image: Image) -> dict:
 
 
 def process_with_gemini(text: str) -> str:
+    """Send OCR text to Gemini and return structured extraction."""
     try:
+        prompt = (
+            "Extract structured key-value information from this document text. "
+            "Return JSON with clear keys and values only.\n\n"
+            f"{text}"
+        )
         response = gemini_client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[{"parts": [{"text": f"Extract structured key-value information from this document text:\n\n{text}"}]}],
+            model="gemini-2.0-flash",  # or gemini-2.5-flash if enabled
+            contents=prompt,
             config=types.GenerateContentConfig(
-                thinking_config=types.ThinkingConfig(thinking_budget=0)
+                temperature=0.2,
+                max_output_tokens=1024,
             ),
         )
-        return response.text
+        if response.candidates:
+            return response.candidates[0].content.parts[0].text
+        return ""
     except Exception as e:
         logger.error(f"Gemini API error: {e}")
         return ""
@@ -120,8 +129,10 @@ def process_document(file_path: str) -> ProcessedDocument:
             "layout": overlay
         })
         time.sleep(1)
+
     full_text = "\n\n".join(all_text)
     gemini_output = process_with_gemini(full_text)
+
     return ProcessedDocument(
         text=full_text,
         pages=processed_pages,
